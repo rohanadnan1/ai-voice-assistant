@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { activeGif } from "@/images";
+import { activeGif, inactiveGif } from "@/images";
 import { useState, useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 
@@ -47,6 +47,20 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
     setChunks(audioChunks);
   };
 
+  const stopRecording = () => {
+    if (mediaRecorder === null) return;
+    // if(pending) return;
+    mediaRecorder.current?.stop();
+    setRecordingStatus("inactive");
+    if (mediaRecorder.current !== null) {
+      mediaRecorder.current.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        uploadAudio(blob);
+        setChunks([]);
+      };
+    }
+  };
+
   useEffect(() => {
     getMicrophonePermission();
   }, []);
@@ -59,7 +73,28 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
         </button>
       )}
       <div className="flex items-center justify-center">
-        <Image src={activeGif} alt="Recorder" width={150} height={150} />
+        {recording && recordingStatus === "inactive" ? (
+          <Image
+            src={inactiveGif}
+            alt="Not Recording"
+            width={150}
+            height={150}
+            onClick={startRecording}
+            priority={true}
+            className="assistant cursor-pointer hover:scale-110 duration-150 transition-all ease-in-out"
+          />
+        ) : null}
+        {recordingStatus === "recording" ? (
+          <Image
+            src={activeGif}
+            alt="Recording"
+            width={150}
+            height={150}
+            onClick={stopRecording}
+            priority={true}
+            className="assistant cursor-pointer hover:scale-110 duration-150 transition-all ease-in-out"
+          />
+        ) : null}
       </div>
     </>
   );
