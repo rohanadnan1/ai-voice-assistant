@@ -1,9 +1,8 @@
-'use client'
+"use client";
 
 import { ChangeEvent, useEffect, useState } from "react";
 
 const VoiceSynthesizer = ({ state, displaySettings }: any) => {
-  const voices = window.speechSynthesis.getVoices();
   const [synth, setSynth] = useState<SpeechSynthesis | null>(null);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [pitch, setPitch] = useState(1);
@@ -14,7 +13,8 @@ const VoiceSynthesizer = ({ state, displaySettings }: any) => {
     if (!synth) {
       setSynth(window.speechSynthesis);
     }
-  }, [window]);
+  }, []);
+
 
   useEffect(() => {
     if (!state.response || !synth) return;
@@ -34,6 +34,8 @@ const VoiceSynthesizer = ({ state, displaySettings }: any) => {
   }, [state]);
 
   const handleVoiceChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (typeof window === "undefined") return;
+    const voices = window.speechSynthesis.getVoices();
     const selectedVoice = voices.find((voice) => voice.name === e.target.value);
     if (!selectedVoice) return;
     setVoice(selectedVoice);

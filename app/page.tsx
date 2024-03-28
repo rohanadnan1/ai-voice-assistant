@@ -3,8 +3,6 @@
 import Messages from "@/components/Messages";
 import Recorder from "@/components/Recorder";
 import { SettingsIcon, Mic, MicOff } from "lucide-react";
-import Image from "next/image";
-import { myPic } from "@/images";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useFormState } from "react-dom";
@@ -49,27 +47,31 @@ export default function Home() {
   };
 
   const denyMicrophonePermission = async () => {
-    if ("MediaRecorder" in window) {
-      setAccessDenied(true);
-      dispatch(setRecording(true));
+    if (typeof window !== "undefined") {
+      if ("MediaRecorder" in window) {
+        setAccessDenied(true);
+        dispatch(setRecording(true));
+      }
     }
   };
-
+  
   const getMicrophonePermission = async () => {
-    if ("MediaRecorder" in window) {
-      try {
-        const streamData = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: false,
-        });
-        setStream(streamData);
-        dispatch(setRecording(false));
-        setAccessDenied(false);
-      } catch (error: any) {
-        alert(error.message);
+    if (typeof window !== "undefined") {
+      if ("MediaRecorder" in window) {
+        try {
+          const streamData = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: false,
+          });
+          setStream(streamData);
+          dispatch(setRecording(false));
+          setAccessDenied(false);
+        } catch (error: any) {
+          alert(error.message);
+        }
+      } else {
+        alert("Your browser does not support MediaRecorder");
       }
-    } else {
-      alert("Your browser does not support MediaRecorder");
     }
   };
 
