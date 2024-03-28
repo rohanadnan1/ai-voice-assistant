@@ -4,14 +4,15 @@ import { ChatMessage } from "@/app/page"
 import { ChevronDownCircle } from "lucide-react"
 import Loader from "./Loader"
 import { useSelector } from "react-redux"
+import { useFormStatus } from "react-dom"
 
 interface Props {
     messages: ChatMessage[]
 }
 
 const Messages = ({messages}: Props) => {
-
-  const {displaySettings} = useSelector((state: any) => state.app)
+  const { pending } = useFormStatus();
+  const {displaySettings, recording} = useSelector((state: any) => state.app)
 
     return(
         <div
@@ -23,7 +24,7 @@ const Messages = ({messages}: Props) => {
       <Loader/>
       <div className="flex flex-col flex-1">
 
-        {!messages.length && !displaySettings && (
+        {!messages.length && !displaySettings && !pending && !recording && (
           <div className="flex flex-col space-y-6 flex-1 items-center justify-end">
             <p className="animate-pulse text-black">Start a conversation</p>
             <ChevronDownCircle

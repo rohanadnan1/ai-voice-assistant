@@ -36,7 +36,6 @@ async function transcript(prevState: any, formData: FormData) {
   );
 
   const result = await client.getAudioTranscription(azureDeploymentName, audio);
-  console.log(`Transcription: ${result.text}`);
 
   const messages: ChatRequestMessage[] = [
     {
@@ -54,7 +53,6 @@ async function transcript(prevState: any, formData: FormData) {
   );
 
   const response = completions.choices[0].message?.content;
-  console.log(`Response: ${response}`);
 
   return {
     sender: result.text,
