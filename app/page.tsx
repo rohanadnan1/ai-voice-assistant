@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useFormState } from "react-dom";
 import transcript from "@/actions/transcript";
 
-interface ChatMessage {
+export interface ChatMessage {
   sender: string;
   response: string;
   id: string;
@@ -59,31 +59,24 @@ export default function Home() {
   }, [state]);
 
   return (
-    <main className="bg-black h-screen overflow-y-scroll">
-    <header className="flex fixed top-0 justify-between text-white w-full p-5">
-      <Image
-        src={myPic}
-        alt="Logo"
-        width={30}
-        height={30}
-        className="rounded-full object-cover"
-      />
+    <main className="bg-black h-screen">
+    <header className="flex fixed top-0 justify-end text-white w-full p-5">
 
       <SettingsIcon
-        className="p-2 m-2 rounded-full cursor-pointer bg-purple-600 text-black transition-all ease-in-out duration-150 hover:bg-purple-700 hover:text-white"
+        className="p-2 m-2 rounded-full cursor-pointer bg-gray-600 text-slate transition-all ease-in-out duration-150 hover:bg-gray-700 hover:text-slate-200"
         size={40}
       />
     </header>
 
     <form action={formAction} className="flex flex-col bg-black">
-      <div className="flex-1 bg-gradient-to-b from-purple-500 to-black">
-        <Messages/>
+      <div className="flex-1 bg-gradient-to-b from-slate-300 to-black">
+        <Messages messages={messages}/>
       </div>
 
       <input type="file" name="audio" hidden ref={inputRef} />
       <button type="submit" hidden ref={btnRef} />
 
-      <div className="fixed bottom-0 w-full overflow-hidden bg-black rounded-t-3xl">
+      <div className="fixed bottom-4 w-full overflow-hidden rounded-t-3xl">
         <Recorder uploadAudio={uploadAudio} />
       </div>
     </form>

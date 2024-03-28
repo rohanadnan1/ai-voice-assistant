@@ -54,6 +54,7 @@ async function transcript(prevState: any, formData: FormData) {
   );
 
   const response = completions.choices[0].message?.content;
+  console.log(`Response: ${response}`);
 
   return {
     sender: result.text,

@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { activeGif, inactiveGif } from "@/images";
 import { useState, useEffect, useRef } from "react";
-import {  useFormStatus } from "react-dom";
-
+import { useFormStatus } from "react-dom";
 
 const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
   const [recording, setRecording] = useState(false);
@@ -67,36 +66,49 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
   }, []);
 
   return (
-    <>
-      <div className="flex items-center justify-center">
-        {!recording && (
-          <button onClick={getMicrophonePermission} type="button">
-            Get Microphone
-          </button>
-        )}
-        {pending && (
+    <div className="flex items-center justify-center">
+      {/* {!recording && (
+        <button onClick={getMicrophonePermission} type="button">
+          Get Microphone
+        </button>
+      )} */}
+      {pending && (
+        <div
+          className="bg-black rounded-full overflow-hidden object-contain flex items-center"
+          style={{ width: "90px", height: "90px" }}
+        >
           <Image
             src={activeGif}
             alt="Recording"
-            width={350}
-            height={350}
+            width={150}
+            height={150}
             onClick={stopRecording}
             priority={true}
             className="assistant grayscale"
           />
-        )}
-        {recording && recordingStatus === "inactive" && !pending ? (
+        </div>
+      )}
+      {recordingStatus === "inactive" && !pending ? (
+        <div
+          className="bg-black rounded-full overflow-hidden object-contain flex items-center"
+          style={{ width: "90px", height: "90px" }}
+        >
           <Image
             src={inactiveGif}
-            alt="Not Recording"
+            alt="Recording"
             width={150}
             height={150}
             onClick={startRecording}
             priority={true}
-            className="assistant cursor-pointer hover:scale-110 duration-150 transition-all ease-in-out"
+            className="assistant cursor-pointer hover:scale-110 duration-150 border-2 border-black  transition-all ease-in-out"
           />
-        ) : null}
-        {recordingStatus === "recording" ? (
+        </div>
+      ) : null}
+      {recordingStatus === "recording" ? (
+        <div
+          className="bg-black rounded-full overflow-hidden object-contain flex items-center"
+          style={{ width: "90px", height: "90px" }}
+        >
           <Image
             src={activeGif}
             alt="Recording"
@@ -106,9 +118,9 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
             priority={true}
             className="assistant cursor-pointer hover:scale-110 duration-150 transition-all ease-in-out"
           />
-        ) : null}
-      </div>
-    </>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
