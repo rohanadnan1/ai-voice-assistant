@@ -1,12 +1,18 @@
+'use client'
+
 import { ChatMessage } from "@/app/page"
 import { ChevronDownCircle } from "lucide-react"
 import Loader from "./Loader"
+import { useSelector } from "react-redux"
 
 interface Props {
     messages: ChatMessage[]
 }
 
 const Messages = ({messages}: Props) => {
+
+  const {displaySettings} = useSelector((state: any) => state.app)
+
     return(
         <div
       className={`flex flex-col min-h-screen p-5 pt-20 ${
@@ -17,7 +23,7 @@ const Messages = ({messages}: Props) => {
       <Loader/>
       <div className="flex flex-col flex-1">
 
-        {!messages.length && (
+        {!messages.length && !displaySettings && (
           <div className="flex flex-col space-y-6 flex-1 items-center justify-end">
             <p className="animate-pulse text-black">Start a conversation</p>
             <ChevronDownCircle

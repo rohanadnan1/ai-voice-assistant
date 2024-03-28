@@ -9,6 +9,10 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 import transcript from "@/actions/transcript";
+import VoiceSynthesizer from "@/components/VoiceSynthesizer";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSettings } from "@/store/app_slice";
+
 
 export interface ChatMessage {
   sender: string;
@@ -23,10 +27,13 @@ export const initialState = {
 };
 
 export default function Home() {
+  const dispatch = useDispatch();
+  const {displaySettings} = useSelector((state: any) => state.app);
   const [state, formAction] = useFormState(transcript, initialState);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  
 
 
   const uploadAudio = (blob: Blob) => {
@@ -65,6 +72,7 @@ export default function Home() {
       <SettingsIcon
         className="p-2 m-2 rounded-full cursor-pointer bg-gray-600 text-slate transition-all ease-in-out duration-150 hover:bg-gray-700 hover:text-slate-200"
         size={40}
+        onClick={() => dispatch(toggleSettings())}
       />
     </header>
 
@@ -78,6 +86,7 @@ export default function Home() {
 
       <div className="fixed bottom-4 w-full overflow-hidden rounded-t-3xl">
         <Recorder uploadAudio={uploadAudio} />
+        <VoiceSynthesizer state={state} displaySettings={displaySettings} />
       </div>
     </form>
   </main>
