@@ -13,23 +13,20 @@ import VoiceSynthesizer from "@/components/VoiceSynthesizer";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSettings, setRecording } from "@/store/app_slice";
 
-
 export interface ChatMessage {
   sender: string;
   response: string;
   id: string;
 }
 
-export const initialState = {
-  sender: "",
-  response: "",
-  id: "",
-};
-
 export default function Home() {
   const dispatch = useDispatch();
   const { displaySettings } = useSelector((state: any) => state.app);
-  const [state, formAction] = useFormState(transcript, initialState);
+  const [state, formAction] = useFormState(transcript, {
+    sender: "",
+    response: "",
+    id: "",
+  });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -51,12 +48,12 @@ export default function Home() {
     }
   };
 
-  const denyMicrophonePermission =async () => {
-    if('MediaRecorder' in window){
+  const denyMicrophonePermission = async () => {
+    if ("MediaRecorder" in window) {
       setAccessDenied(true);
       dispatch(setRecording(true));
-    } 
-  }
+    }
+  };
 
   const getMicrophonePermission = async () => {
     if ("MediaRecorder" in window) {
@@ -67,7 +64,7 @@ export default function Home() {
         });
         setStream(streamData);
         dispatch(setRecording(false));
-        setAccessDenied(false)
+        setAccessDenied(false);
       } catch (error: any) {
         alert(error.message);
       }
@@ -92,8 +89,7 @@ export default function Home() {
   return (
     <main className="bg-black h-screen">
       <header className="flex fixed top-0 justify-between text-white w-full p-5">
-       {
-        accessDenied ? (
+        {accessDenied ? (
           <MicOff
             className="p-2 m-2 rounded-full cursor-pointer bg-gray-600 text-slate transition-all ease-in-out duration-150 hover:bg-gray-700 hover:text-slate-200"
             size={40}
@@ -105,8 +101,7 @@ export default function Home() {
             size={40}
             onClick={denyMicrophonePermission}
           />
-        )
-       }
+        )}
         <SettingsIcon
           className="p-2 m-2 rounded-full cursor-pointer bg-gray-600 text-slate transition-all ease-in-out duration-150 hover:bg-gray-700 hover:text-slate-200"
           size={40}
@@ -123,7 +118,12 @@ export default function Home() {
         <button type="submit" hidden ref={btnRef} />
 
         <div className="fixed bottom-4 w-full overflow-hidden rounded-t-3xl">
-          <Recorder uploadAudio={uploadAudio} getMicrophonePermission={getMicrophonePermission} stream={stream} accessDenied={accessDenied}/>
+          <Recorder
+            uploadAudio={uploadAudio}
+            getMicrophonePermission={getMicrophonePermission}
+            stream={stream}
+            accessDenied={accessDenied}
+          />
           <VoiceSynthesizer state={state} displaySettings={displaySettings} />
         </div>
       </form>
