@@ -1,5 +1,6 @@
 import { ChatMessage } from "@/app/page"
 import { ChevronDownCircle } from "lucide-react"
+import Loader from "./Loader"
 
 interface Props {
     messages: ChatMessage[]
@@ -12,14 +13,16 @@ const Messages = ({messages}: Props) => {
         messages.length > 0 ? "pb-96" : "pb-32"
       }`}
     >
-      <div className="flex flex-col flex-1 space-y-5 max-w-3xl mx-auto">
+
+      <Loader/>
+      <div className="flex flex-col flex-1">
 
         {!messages.length && (
-          <div className="flex flex-col space-y-10 flex-1 items-center justify-end pl-6">
-            <p className="text-gray-500 animate-pulse">Start a conversation</p>
+          <div className="flex flex-col space-y-6 flex-1 items-center justify-end">
+            <p className="animate-pulse text-black">Start a conversation</p>
             <ChevronDownCircle
-              size={64}
-              className="animate-bounce text-gray-500"
+              size={50}
+              className="animate-bounce text-black"
             />
           </div>
         )}
