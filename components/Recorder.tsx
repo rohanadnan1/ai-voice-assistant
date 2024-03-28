@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { activeGif, inactiveGif } from "@/images";
 import { useState, useEffect, useRef } from "react";
-import { useFormState } from "react-dom";
+import {  useFormStatus } from "react-dom";
+
 
 const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
   const [recording, setRecording] = useState(false);
@@ -11,7 +12,7 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const [chunks, setChunks] = useState<Blob[]>([]);
   const [recordingStatus, setRecordingStatus] = useState("inactive");
-  //   const {pending} = useFormState();
+  const { pending } = useFormStatus();
 
   const getMicrophonePermission = async () => {
     if ("MediaRecorder" in window) {
@@ -32,7 +33,7 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
 
   const startRecording = () => {
     if (mediaRecorder === null || stream === null) return;
-    // if(pending) return;
+    if (pending) return;
 
     setRecordingStatus("recording");
     const media = new MediaRecorder(stream);
@@ -49,7 +50,7 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
 
   const stopRecording = () => {
     if (mediaRecorder === null) return;
-    // if(pending) return;
+    if (pending) return;
     mediaRecorder.current?.stop();
     setRecordingStatus("inactive");
     if (mediaRecorder.current !== null) {
@@ -67,13 +68,24 @@ const Recorder = ({ uploadAudio }: { uploadAudio: (blob: Blob) => void }) => {
 
   return (
     <>
-      {!recording && (
-        <button onClick={getMicrophonePermission} type="button">
-          Get Microphone
-        </button>
-      )}
       <div className="flex items-center justify-center">
-        {recording && recordingStatus === "inactive" ? (
+        {!recording && (
+          <button onClick={getMicrophonePermission} type="button">
+            Get Microphone
+          </button>
+        )}
+        {pending && (
+          <Image
+            src={activeGif}
+            alt="Recording"
+            width={350}
+            height={350}
+            onClick={stopRecording}
+            priority={true}
+            className="assistant grayscale"
+          />
+        )}
+        {recording && recordingStatus === "inactive" && !pending ? (
           <Image
             src={inactiveGif}
             alt="Not Recording"

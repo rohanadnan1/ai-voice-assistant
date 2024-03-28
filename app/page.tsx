@@ -5,12 +5,28 @@ import Recorder from "@/components/Recorder";
 import { SettingsIcon } from "lucide-react";
 import Image from "next/image";
 import { myPic } from "@/images";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useState } from "react";
+import { useFormState } from "react-dom";
+import transcript from "@/actions/transcript";
 
+interface ChatMessage {
+  sender: string;
+  response: string;
+  id: string;
+}
+
+export const initialState = {
+  sender: "",
+  response: "",
+  id: "",
+};
 
 export default function Home() {
+  const [state, formAction] = useFormState(transcript, initialState);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const btnRef = useRef<HTMLButtonElement | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
 
   const uploadAudio = (blob: Blob) => {
@@ -29,6 +45,19 @@ export default function Home() {
 
   }
 
+  useEffect(() => {
+    if (state.response && state.sender) {
+      setMessages((prev) => [
+        {
+          sender: state.sender || '',
+          response: state.response || '',
+          id: state.id || ''
+        },
+        ...prev
+      ]);
+    }
+  }, [state]);
+
   return (
     <main className="bg-black h-screen overflow-y-scroll">
     <header className="flex fixed top-0 justify-between text-white w-full p-5">
@@ -46,7 +75,7 @@ export default function Home() {
       />
     </header>
 
-    <form className="flex flex-col bg-black">
+    <form action={formAction} className="flex flex-col bg-black">
       <div className="flex-1 bg-gradient-to-b from-purple-500 to-black">
         <Messages/>
       </div>
